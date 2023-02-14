@@ -6,14 +6,48 @@
 
 body {
     margin: 0;
+    background-color: #1F1D2B;
+}
+
+.container {
+    padding: 5px;
+}
+
+header {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+header input[type="text"] {
+    flex-basis: 50%;
+    height: 40px;
+    border: none;
+    outline: none;
+    border-radius: 12px 0 0 12px;
+    background-color: #353340;
+    color: #666696;
+    padding: 10px;
+}
+
+header button {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.hide {
+    display: none !important;
 }
 
 .video-container {
     position: relative;
-    width: 90%;
+    width: 95%;
     max-width: 1000px;
     display: flex;
     justify-content: center;
+    margin: 60px;
     margin-inline: auto;
 }
 
@@ -21,11 +55,11 @@ body {
     max-width: initial;
     width: 100%;
     max-height: 100vh;
-
 }
 
 video {
     width: 100%;
+    border-radius: 15px;
 }
 
 .controls-container {
@@ -33,22 +67,12 @@ video {
     width: 100%;
     bottom: 0;
     left: 0;
-    color: #fff;
+    margin-bottom: 10px;
     z-index: 100;
     opacity: 0;
     transition: 0.32s ease-out;
 }
 
-.controls-container::before {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
-    z-index: -1;
-    aspect-ratio: 6/1;
-    pointer-events: none;
-}
 
 .video-container:hover .controls-container,
 .video-container.paused .controls-container {
@@ -57,9 +81,19 @@ video {
 
 .controls {
     display: flex;
+    color: #cfd0da;
     gap: .5rem;
-    padding: .25rem;
+    padding: 4px;
     align-items: center;
+    width: 90%;
+    margin-inline: auto;
+    /* From https://css.glass */
+    background: rgba(48, 52, 64, 0.52);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(1.1px);
+    -webkit-backdrop-filter: blur(1.1px);
+    border: 1px solid rgba(48, 52, 64, 0.36);
 }
 
 .controls button {
@@ -79,6 +113,10 @@ video {
 }
 
 /* hide play button , (play clicked)-> paused class removed */
+.video-container:not(.paused) .pause-icon {
+    color: #fff;
+}
+
 .video-container:not(.paused) .play-icon {
     display: none;
 }
@@ -108,21 +146,19 @@ video {
 }
 
 .vol-container input {
-    width: 0;
+    width: 90px;
     transform-origin: left;
-    transform: scaleX(0);
     transition: width 1.32 ease-in-out, transform 1.3s ease-in-out;
-}
-
-.vol-container:hover input {
-    width: 80px;
-    transform: scaleX(1);
 }
 
 
 /* full and mini screen */
 .video-container.full-screen .open {
     display: none;
+}
+
+.video-container.full-screen .close {
+    color: #fff;
 }
 
 .video-container:not(.full-screen) .close {
@@ -143,6 +179,7 @@ video {
     position: relative;
     height: 8px;
     margin-bottom: 10px;
+    width: 80%;
 }
 
 progress {
@@ -151,26 +188,12 @@ progress {
     appearance: none;
     border-radius: 2px;
     width: 100%;
-    height: 8.4px;
+    height: 0;
     pointer-events: none;
     position: absolute;
     top: 0;
 }
 
-progress::-webkit-progress-bar {
-    background-color: #474545;
-    border-radius: 2px;
-}
-
-progress::-webkit-progress-value {
-    background: var(--youtube-red);
-    border-radius: 2px;
-}
-
-progress::-moz-progress-bar {
-    border: 1px solid var(--youtube-red);
-    background: var(--youtube-red);
-}
 
 .seek {
     position: absolute;
