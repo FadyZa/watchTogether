@@ -1,3 +1,5 @@
+const formContainer = document.querySelector(".form-container");
+const enterRoom = document.getElementById("enterRoom");
 const video = document.querySelector("#myVideo");
 const currentTime = document.querySelector(".current")
 const totalTime = document.querySelector(".total")
@@ -8,8 +10,9 @@ const miniBtn = document.querySelector(".mini-btn");
 const fullBtn = document.querySelector(".full-btn");
 const volumeBtn = document.querySelector(".volume-btn");
 const volumeSlider = document.getElementById("vol-slider");
-const progressBar = document.getElementById("progress-bar");
-const seek = document.querySelector(".seek")
+const seek = document.querySelector(".seek");
+const skip = document.querySelector(".skip");
+const previous = document.querySelector(".previous");
 //////////////////////////////////////////////////
 
 /////////////////////////////////////////// Real Time DATABASE ///////////////////////////////////////////
@@ -30,14 +33,27 @@ const firebaseConfig = {
   appId: "1:273247284108:web:7eb3867bdb372c8727c4a9",
   measurementId: "G-2T83JS8LHG"
 };
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 // Initialize Realtime Database and get a reference to the service
-import { getDatabase, set, ref, onValue, update,remove } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+import { getDatabase, set, ref, onValue, update,remove,get } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
 const database = getDatabase();
 // Get the real-time database reference
-const myVideo = ref(database, 'videos');
+
+////////////////// Form pop up and get Room Id
+const getId = async ()=>{
+    return new Promise((resolve, reject) => {
+        enterRoom.addEventListener("click",(e)=>{
+            e.preventDefault()
+            const roomId = document.getElementById("roomId").value;
+            formContainer.style.display = "none"
+            resolve(roomId);
+        })
+    })
+} 
+
+const myID = await getId();
+const myVideo = ref(database, 'videos/' + myID);
 
 // Update the current time in the database when it changes
 // initialize video Data 
@@ -53,6 +69,14 @@ function initialize(src,dur){
         console.log("failed")
     });
 }
+
+get(myVideo).then((snapshot) => {
+    if (snapshot.exists()) {
+        if (confirm("this Room already exist do you want join!") == false) {
+            return;
+        }
+}})
+
 
 function updateStatus(playing){
     update(myVideo,{
@@ -129,8 +153,6 @@ urlBtn.addEventListener("click", () => {
     },{ once: true });
 });
 
-
-
 // timeline and duration CONTROL /////////////////////
 function formatTime(duration){
     const result = new Date(duration * 1000).toISOString().substr(11, 8);
@@ -144,7 +166,6 @@ function setTotalTime(myDuration){
     const total = formatTime(myDuration);
     totalTime.innerHTML = `${total.minutes}:${total.seconds}`;
     const videoDuration = Math.round(video.duration);
-    progressBar.setAttribute('max',videoDuration)
     seek.setAttribute('max',videoDuration)
 };
 
@@ -156,14 +177,12 @@ video.addEventListener("timeupdate",()=>{
 
 function updateProgress() {
     seek.value = Math.floor(video.currentTime);
-    progressBar.value = Math.floor(video.currentTime);
 }
 
 // the input range is moved 
 function skipAhead(event) {
-    const skipTo = event.target.dataset.seek ? event.target.dataset.seek : event.target.value;
+    const skipTo = event.target.value;
     video.currentTime = skipTo;
-    progressBar.value = skipTo;
     seek.value = skipTo;
 }
 
@@ -225,4 +244,15 @@ video.addEventListener("volumechange",()=>{
         volumeLevel = "low"
     }
     videoContainer.dataset.volume = volumeLevel;
+})
+
+// skip 10 secs next and back
+skip.addEventListener("click",()=>{
+    video.currentTime += 10;
+    updateStatus(true)
+})
+
+previous.addEventListener("click",()=>{
+    video.currentTime -= 10;
+    updateStatus(true)
 })
