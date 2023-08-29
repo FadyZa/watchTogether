@@ -26,6 +26,9 @@ Watch Together offers a seamless experience for synchronized video playback with
 
 4. **Joining a Room:** If the room ID already exists and someone else has created it, entering the existing room ID will grant you access to the synchronized video playback. You'll instantly be watching with your friends!
 
+[![Visit Demo](https://img.shields.io/badge/Visit%20Demo-blue)](https://watchtogether-d4d1a.web.app/)
+
+
 ## Technical Details
 
 The Watch Together application is powered by Google Firebase's real-time database capabilities, which enable seamless synchronization of video playback among multiple users. When a new room is created, the room ID and video source information are stored in the database. This information is then used to manage access and ensure that all participants are watching the same content at the same time.
